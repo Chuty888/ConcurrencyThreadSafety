@@ -55,7 +55,7 @@ public class ActorDemo {
         public void run() {
             try {
                 while (true) {
-                    Msg m = inbox.take();     // ไม่มีของก็รอเอง
+                    Msg m = inbox.take();     // ไม่มีของก็รอเอง  
                     if (m.poison) {
                         return;
                     }

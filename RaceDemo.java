@@ -63,18 +63,18 @@ public class RaceDemo {
         final Account acc = new Account(1, 0);
         Thread[] workers = new Thread[THREADS];
 
-        for (int i = 0; i < THREADS; i++) {
+        for (int i = 0; i < THREADS; i++) {  //4เทรด
             workers[i] = new Thread(new Runnable() {
                 public void run() {
                     for (int k = 0; k < OPS_PER_THREAD; k++) {
-                        acc.deposit(1);
+                        acc.deposit(1); //ฝากครั้งละ1
                     }
                 }
             });
         }
 
         for (int i = 0; i < THREADS; i++) {
-            workers[i].start();
+            workers[i].start();   //4คนฝากพร้อม
         }
         for (int i = 0; i < THREADS; i++) {
             workers[i].join();

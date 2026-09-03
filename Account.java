@@ -12,7 +12,7 @@ public class Account {
     private final int id;
 
     /** ยอดเงินคงเหลือ — จุดที่เธรดหลายตัวแย่งกันเขียน */
-    private int balance;
+    private int balance; //ไม่เก็บเป็นทศนิยม เช่น เก็บเป็นสตาง 10000สตางค์
 
     /**
      * @param id            เลขบัญชี ต้องไม่ซ้ำกันในระบบเดียวกัน
@@ -28,7 +28,7 @@ public class Account {
 
     /** เลขบัญชี — ค่านี้ไม่เปลี่ยนตลอดอายุ object จึงไม่ต้องคุ้มครอง */
     public int id() {
-        return id;
+        return id;   //ไม่มีทางโดนแก้
     }
 
     // ---------------------------------------------------------------
@@ -38,7 +38,7 @@ public class Account {
     // คำใบ้: ถ้าเธรด A เพิ่งเขียน balance ลงไป เธรด B ที่อ่านตอนนี้
     //        รับประกันได้หรือไม่ว่าจะเห็นค่าใหม่ ไม่ใช่ค่าเก่าที่ค้างในแคชของ CPU
     // ---------------------------------------------------------------
-    public int balance() {
+    public synchronized int balance() { //ดึงค่ากลับ
         return balance;
     }
 
@@ -48,9 +48,9 @@ public class Account {
     // บรรทัด balance = balance + amount; ดูเหมือนคำสั่งเดียว
     // แต่จริง ๆ คือ อ่าน → บวก → เขียน สามจังหวะที่ถูกแทรกกลางคันได้
     // ---------------------------------------------------------------
-    public void deposit(int amount) {
+    public synchronized void deposit(int amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be positive");
+            throw new IllegalArgumentException("amount must be positive"); //รอฝากเสร็จ
         }
         balance = balance + amount;
     }
@@ -64,11 +64,11 @@ public class Account {
     //
     // @return true ถ้าถอนสำเร็จ, false ถ้าเงินไม่พอ
     // ---------------------------------------------------------------
-    public boolean withdraw(int amount) {
+    public synchronized boolean withdraw(int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be positive");
         }
-        if (balance >= amount) {
+        if (balance >= amount) { //ดึง balance ปัจจุบันก่อน
             balance = balance - amount;
             return true;
         }
